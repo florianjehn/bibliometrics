@@ -30,6 +30,7 @@ def create_graph_from_dimensions_full_dataset(path):
         # Get the reference ids and split them into a list
         reference_ids = raw_df.loc[citing_paper, "reference_ids"]
         if reference_ids is not np.nan:
+            # Split the reference ids into a list
             reference_ids = reference_ids[1:-1].replace(
                 "'", ""
                 ).replace(
