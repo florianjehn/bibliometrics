@@ -2,8 +2,11 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.decomposition import PCA
+from statsmodels.multivariate.factor import Factor
 from factor_analyzer import FactorAnalyzer
 import os
+from sklearn.preprocessing import StandardScaler
 
 def create_graph_from_dimensions_full_dataset(path):
     """
@@ -15,7 +18,7 @@ def create_graph_from_dimensions_full_dataset(path):
     Returns:
         A citation matrix
     """
-    raw_df = pd.read_csv(path, index_col=0, nrows=300)
+    raw_df = pd.read_csv(path, index_col=0, nrows=100)
     # set the index to the publication id
     raw_df.set_index("id", inplace=True)
 
@@ -48,7 +51,7 @@ def create_graph_from_dimensions_full_dataset(path):
     return G
 
 
-def prepare_matrix_from_graph(G, citation_metric = "bib_coupling"):
+def prepare_matrix_from_graph(G, citation_metric="bib_coupling"):
     """
     This function takes a graph and creates a co-citation matrix from it.
     And applies the cosine similarity to it to normalize it. This takes
@@ -82,47 +85,43 @@ def prepare_matrix_from_graph(G, citation_metric = "bib_coupling"):
 def factor_analysis(cc_matrix):
     """
     This function takes a co-citation matrix and applies factor analysis
-    to it. This is used to reduce the dimensionality of the matrix.
+    using statsmodels' Factor class. It aims to reduce the dimensionality of the matrix.
 
     Arguments:
         cc_matrix: A co-citation matrix
 
     Returns:
-        A reduced co-citation matrix
+        Tuple of eigenvalues, factor loadings, and factor scores
     """
-    fa1 = FactorAnalyzer(n_factors=len(cc_matrix), rotation=None)
+    # Ensure that the matrix does not contain any nans or infs
+    assert not np.isnan(cc_matrix).any()
+    assert not np.isinf(cc_matrix).any()
 
-    # Make sure that the matrix is does not contain any nans or infs
-    assert np.count_nonzero(np.isnan(cc_matrix)) == 0
-    assert np.count_nonzero(np.isinf(cc_matrix)) == 0
+    print(np.linalg.cond(cc_matrix))
 
-    fa1.fit(cc_matrix)
-    ev, v = fa1.get_eigenvalues()
+    # Standardize the data
+    scaler = StandardScaler()
+    cc_matrix_standardized = scaler.fit_transform(cc_matrix)
 
-    # Get the number of factors that explain 90% of the variance
-    n_factors = 0
-    for i in range(len(ev)):
-        if ev[i] > 1:
-            n_factors += 1
+    # Initialize Factor model with principal component extraction
+    factor_model = Factor(cc_matrix, method='pa')
 
-    # Apply factor analysis
-    # Using promax rotation, as the factors are expected to be correlated
-    fa2 = FactorAnalyzer(n_factors=n_factors, rotation="promax")
-    fa2.fit(cc_matrix)
-    ev, v = fa2.get_eigenvalues()
+    # Fit the model
+    factor_results = factor_model.fit()
+
+    # Apply promax rotation
+    rotated_factor_results = factor_results.rotate('promax')
+
+    # Get the eigenvalues
+    ev = rotated_factor_results.eigenvals
 
     # Get the factor loadings
-    loadings = fa2.loadings_
+    loadings = rotated_factor_results.loadings
 
     # Get the factor scores
-    factor_scores = fa2.transform(cc_matrix)
+    factor_scores = rotated_factor_results.factor_score
 
     return ev, loadings, factor_scores
-
-
-
-
-
 
 
 if __name__ == '__main__':
