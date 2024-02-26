@@ -4,9 +4,8 @@ import networkx as nx
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import PCA
 from statsmodels.multivariate.factor import Factor
-from factor_analyzer import FactorAnalyzer
 import os
-from sklearn.preprocessing import StandardScaler
+
 
 def create_graph_from_dimensions_full_dataset(path):
     """
@@ -18,7 +17,7 @@ def create_graph_from_dimensions_full_dataset(path):
     Returns:
         A citation matrix
     """
-    raw_df = pd.read_csv(path, index_col=0, nrows=100)
+    raw_df = pd.read_csv(path, index_col=0, nrows=50)
     # set the index to the publication id
     raw_df.set_index("id", inplace=True)
 
@@ -51,11 +50,10 @@ def create_graph_from_dimensions_full_dataset(path):
     return G
 
 
-def prepare_matrix_from_graph(G, citation_metric="bib_coupling"):
+def create_matrix(G, citation_metric):
     """
-    This function takes a graph and creates a co-citation matrix from it.
-    And applies the cosine similarity to it to normalize it. This takes
-    into account the whole objects citation network at once. 
+    This function takes a graph and creates a co-citation or bibliometrix coupling
+    matrix from it.
 
     Arguments:
         G: A directed graph
@@ -63,10 +61,10 @@ def prepare_matrix_from_graph(G, citation_metric="bib_coupling"):
         can be either "bib_coupling" or "co_citation"
 
     Returns:
-        A co-citation matrix with cosine similarity applied
+        A co-citation or bib_coupling matrix
     """
     # Create a matrix from the graph
-    g_adj = nx.adjacency_matrix(G)
+    g_adj = nx.to_pandas_adjacency(G, nodelist=G.nodes)
 
     # Apply the citation metric
     if citation_metric == "bib_coupling":
@@ -75,11 +73,118 @@ def prepare_matrix_from_graph(G, citation_metric="bib_coupling"):
         matrix = g_adj.transpose().dot(g_adj)
     else:
         raise ValueError("Unknown citation metric")
+    
+    return matrix
+    
 
+def prepare_matrix(matrix, threshold):
+    """
+    Prepares the matrix so it can be used for factor analysis. This includes
+    dropping all rows and columns that are all zeros, dropping all rows and
+    columns whose entries are below a certain threshold of Co-citation counts
+    or BCFs, and applying cosine similarity.
+
+    Arguments:
+        matrix: A co-citation or BCF matrix
+        threshold: The threshold for dropping rows and columns
+
+    Returns:
+        A prepared matrix
+    """
     # Apply cosine similarity
-    matrix = cosine_similarity(matrix)
+    # Zhao and Strotmann (2015) advocate for transforming raw connectedness measures into
+    # normalized statistical similarity measures like Pearson's correlation coefficient or
+    # Cosine similarity. The normalization considers entire co-citation or BCF records, offering
+    # advantages over individual counts. Despite the widespread use of both metrics, the authors
+    # note that Cosine similarity tends to have more favorable mathematical properties compared
+    # to Pearson's correlation coefficient (Zhao and Strotmann, 2015, p. 66).
+    matrix_array = cosine_similarity(matrix)
+    # Convert the matrix to a pandas dataframe
+    matrix = pd.DataFrame(matrix_array, index=matrix.index, columns=matrix.index)
+
+    # Check if the matrix is symmetric, as this is a requirement for the diagonal treatment
+    assert check_symmetric(matrix)
+
+    # Treat diagonal
+    # The diagonal of the matrix contains the self-citations or self-BCFs. These are
+    # usually not of interest, but have to be treated in some way to make sure that they don't
+    # negatively affect the factor analysis. There are different ways to treat the diagonal,
+    # for example by setting the diagonal to zero, or by replacing the diagonal with the average
+    # of the off-diagonal values (Zhao and Strotmann, 2015). The latter is the more common practice in
+    # the literature.
+    matrix = modify_diagonal(matrix)
+
+    # Drop all rows and columns that are all zeros, as they do not contain any information
+    # and would only increase the dimensionality of the matrix.
+    matrix = matrix.loc[(matrix.sum(axis=1) != 0), (matrix.sum(axis=0) != 0)]
+
+    # Drop all the rows and columns whose entries are below a certain threshold of
+    # Co-citation counts or BCFs. This is a common practice in the literature to
+    # reduce the dimensionality of the matrix and to focus on the most relevant
+    # relationships (Zhao and Strotmann, 2015). This is done by checking which percentage
+    # of the cells are containing zeros and then dropping the rows and columns which have
+    # a higher percentage of zeros than the threshold.
+    # Check if the threshold is a valid percentage
+    assert 0 <= threshold <= 1
+    matrix = remove_sparse_rows_cols(matrix, threshold)
 
     return matrix
+
+
+def check_symmetric(a, tol=1e-8):
+    """
+    Checks if a matrix is symmetric.
+
+    Args:
+        a: A matrix
+        tol: Tolerance for the check
+
+    Returns:
+        True if the matrix is symmetric, False otherwise
+    """
+    return np.all(np.abs(a-a.T) < tol)
+
+
+def modify_diagonal(df):
+    """
+    Modifies the diagonal of a dataframe with the sum of the three highest values in each column.
+
+    Args:
+        df: A pandas dataframe.
+
+    Returns:
+        A pandas dataframe with the modified diagonal.
+    """
+    for i in range(df.shape[0]):
+        df.iloc[i, i] = df.iloc[:, i].nlargest(3).sum()
+    return df
+
+
+def remove_sparse_rows_cols(df, percent_threshold):
+    """
+    Removes rows and columns from a DataFrame where more than a specified
+    percentage of values are zero.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to filter.
+        percent_threshold (float): The percentage of zeros above which a row
+            or column will be removed. For example, 0.9 means that a row or
+            column will be removed if more than 90% of its values are zero.
+
+    Returns:
+        pd.DataFrame: The filtered DataFrame.
+    """
+    assert 0 <= percent_threshold <= 1
+
+    # Filter rows
+    rows_to_keep = (df != 0).sum(axis=1) / df.shape[1] > 1 - percent_threshold
+    df = df[rows_to_keep]
+
+    # Filter columns
+    cols_to_keep = (df != 0).sum(axis=0) / df.shape[0] > 1 - percent_threshold
+    df = df.loc[:, cols_to_keep]
+
+    return df
 
 
 def factor_analysis(cc_matrix):
@@ -96,15 +201,23 @@ def factor_analysis(cc_matrix):
     # Ensure that the matrix does not contain any nans or infs
     assert not np.isnan(cc_matrix).any()
     assert not np.isinf(cc_matrix).any()
+    assert cc_matrix.min() >= 0
+    assert cc_matrix.max() <= 1
+    assert cc_matrix.std() > 0
+    assert cc_matrix.mean() > 0
 
-    print(np.linalg.cond(cc_matrix))
+    # Drop all rows and columns that are all zeros
+    cc_matrix = cc_matrix[~np.all(cc_matrix == 0, axis=1)]
+    cc_matrix = cc_matrix[:, ~np.all(cc_matrix == 0, axis=0)]
 
-    # Standardize the data
-    scaler = StandardScaler()
-    cc_matrix_standardized = scaler.fit_transform(cc_matrix)
+    # Standardize the data (brauch wir eventl nicht mehr, da wir ja schon cosine similarity haben)
+  #  scaler = StandardScaler()
+ #   cc_matrix_standardized = scaler.fit_transform(cc_matrix)
+
+    temp = cc_matrix.sum(axis=0).sum()
 
     # Initialize Factor model with principal component extraction
-    factor_model = Factor(cc_matrix, method='pa')
+    factor_model = Factor(endog=cc_matrix, n_factor=10, method='pa')
 
     # Fit the model
     factor_results = factor_model.fit()
@@ -124,6 +237,100 @@ def factor_analysis(cc_matrix):
     return ev, loadings, factor_scores
 
 
+# def factor_analysis(cc_matrix):
+#     """
+#     This function takes a co-citation matrix and performs dimensionality reduction
+#     using scikit-learn's PCA. It aims to reduce the dimensionality of the matrix.
+
+#     Arguments:
+#         cc_matrix: A co-citation matrix
+
+#     Returns:
+#         Tuple of principal components, explained variance ratios, and factor scores
+#     """
+
+#     # Ensure that the matrix does not contain any nans or infs
+#     assert not np.isnan(cc_matrix).any()
+#     assert not np.isinf(cc_matrix).any()
+
+#     # Standardize the data:
+#     scaler = StandardScaler()
+#     cc_matrix_standardized = scaler.fit_transform(cc_matrix)
+
+#     # Initialize PCA model
+#     pca = PCA()
+
+#     # Apply PCA to reduce dimensionality (choose number of components)
+#   #  pca.n_components = n_components  # Adjust n_components as needed
+
+#     # Fit the model
+#     pca.fit(cc_matrix_standardized)
+
+#     # Get principal components
+#     principal_components = pca.components_
+
+#     # Get explained variance ratios
+#     explained_variance_ratios = pca.explained_variance_ratio_
+
+#     # Project data onto principal components (factor scores)
+#     factor_scores = pca.transform(cc_matrix_standardized)
+    #TODO add option here to drop rows with a specific percentage of zeros
+
+#     return principal_components, explained_variance_ratios, factor_scores
+
+# def factor_analysis(cc_matrix):
+#     """
+#     This function performs dimensionality reduction and applies promax rotation.
+
+#     Arguments:
+#         cc_matrix: A co-citation matrix
+
+#     Returns:
+#         Tuple containing:
+#             - principal components
+#             - explained variance ratios
+#             - factor loadings
+#             - factor scores
+#             - rotated loadings (after applying promax rotation)
+#     """
+
+#     # Ensure that the matrix does not contain any nans or infs
+#     assert not np.isnan(cc_matrix).any()
+#     assert not np.isinf(cc_matrix).any()
+
+#     # Standardize the data:
+#     scaler = StandardScaler()
+#     cc_matrix_standardized = scaler.fit_transform(cc_matrix)
+
+#     # Initialize PCA model
+#     pca = PCA()
+
+#     # Apply PCA to reduce dimensionality (choose number of components)
+#     pca.fit(cc_matrix_standardized)
+
+#     # Extract principal components
+#     principal_components = pca.components_
+
+#     # Explained variance ratios (relevant only if PCA used)
+#     explained_variance_ratios = pca.explained_variance_ratio_
+
+#     # Always use PCA components for factor analysis
+#     factor_model = Factor(principal_components)
+
+#     # Fit the model
+#     factor_results = factor_model.fit()
+
+#     # Apply promax rotation (always)
+#     rotated_factor_results = factor_results.rotate('promax')
+
+#     # Get factor analysis results
+#     loadings = rotated_factor_results.loadings
+#     factor_scores = rotated_factor_results.factor_score
+
+#     # Return final results
+#     return principal_components, explained_variance_ratios, loadings, factor_scores, rotated_factor_results.loadings_
+
+
 if __name__ == '__main__':
     graph = create_graph_from_dimensions_full_dataset(
         "data"
@@ -132,10 +339,6 @@ if __name__ == '__main__':
         + os.sep
         + "publications_with_CT_in_titles_abstracts.csv"
     )
-    cc_matrix = prepare_matrix_from_graph(graph)
-
-    ev, loadings, factor_scores = factor_analysis(cc_matrix)
-    print(ev)
-    print(loadings)
-    print(factor_scores)
-    
+    matrix = create_matrix(graph, "co_citation")
+    prepared_matrix = prepare_matrix(matrix, 0.9)
+    print(prepared_matrix.head())
