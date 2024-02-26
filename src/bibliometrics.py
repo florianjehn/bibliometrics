@@ -140,7 +140,11 @@ def check_symmetric(a, tol=1e-8):
 
 def modify_diagonal(df):
     """
-    odifies the diagonal of a dataframe with mean of each column.
+    Modifies the diagonal of a dataframe with mean of each column.
+
+    NOTE: Not sure if this is the correct call here, but it seems to be a
+    common practice in the literature to modify the diagonal of the matrix
+    but there are a ton of options and not really explained when to use which.
 
     Args:
         df: A pandas dataframe.
