@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.decomposition import PCA
 from statsmodels.multivariate.factor import Factor
 import os
 
@@ -73,9 +72,9 @@ def create_matrix(G, citation_metric):
         matrix = g_adj.transpose().dot(g_adj)
     else:
         raise ValueError("Unknown citation metric")
-    
+
     return matrix
-    
+
 
 def prepare_matrix(matrix, threshold):
     """
@@ -101,6 +100,12 @@ def prepare_matrix(matrix, threshold):
     matrix_array = cosine_similarity(matrix)
     # Convert the matrix to a pandas dataframe
     matrix = pd.DataFrame(matrix_array, index=matrix.index, columns=matrix.index)
+
+    # Check if the matrix is symmetric
+    assert check_symmetric(matrix)
+
+    # Treat the diagonal of the matrix
+    matrix = modify_diagonal(matrix)
 
     # Drop all rows and columns that are all zeros, as they do not contain any information
     # and would only increase the dimensionality of the matrix.
@@ -135,7 +140,7 @@ def check_symmetric(a, tol=1e-8):
 
 def modify_diagonal(df):
     """
-    Modifies the diagonal of a dataframe with the sum of the three highest values in each column.
+    odifies the diagonal of a dataframe with mean of each column.
 
     Args:
         df: A pandas dataframe.
@@ -144,7 +149,7 @@ def modify_diagonal(df):
         A pandas dataframe with the modified diagonal.
     """
     for i in range(df.shape[0]):
-        df.iloc[i, i] = df.iloc[:, i].nlargest(3).sum()
+        df.iloc[i, i] = df.iloc[:, i].mean()
     return df
 
 
@@ -156,8 +161,8 @@ def remove_sparse_rows_cols(df, percent_threshold):
     Args:
         df (pd.DataFrame): The DataFrame to filter.
         percent_threshold (float): The percentage of zeros above which a row
-            or column will be removed. For example, 0.9 means that a row or
-            column will be removed if more than 90% of its values are zero.
+            or column will be removed. For example, 0.15 means that a row or
+            a maximum of 15% of zeros is allowed.
 
     Returns:
         pd.DataFrame: The filtered DataFrame.
@@ -186,24 +191,6 @@ def factor_analysis(cc_matrix):
     Returns:
         Tuple of eigenvalues, factor loadings, and factor scores
     """
-    # Ensure that the matrix does not contain any nans or infs
-    assert not np.isnan(cc_matrix).any()
-    assert not np.isinf(cc_matrix).any()
-    assert cc_matrix.min() >= 0
-    assert cc_matrix.max() <= 1
-    assert cc_matrix.std() > 0
-    assert cc_matrix.mean() > 0
-
-    # Drop all rows and columns that are all zeros
-    cc_matrix = cc_matrix[~np.all(cc_matrix == 0, axis=1)]
-    cc_matrix = cc_matrix[:, ~np.all(cc_matrix == 0, axis=0)]
-
-    # Standardize the data (brauch wir eventl nicht mehr, da wir ja schon cosine similarity haben)
-  #  scaler = StandardScaler()
- #   cc_matrix_standardized = scaler.fit_transform(cc_matrix)
-
-    temp = cc_matrix.sum(axis=0).sum()
-
     # Initialize Factor model with principal component extraction
     factor_model = Factor(endog=cc_matrix, n_factor=10, method='pa')
 
@@ -225,100 +212,6 @@ def factor_analysis(cc_matrix):
     return ev, loadings, factor_scores
 
 
-# def factor_analysis(cc_matrix):
-#     """
-#     This function takes a co-citation matrix and performs dimensionality reduction
-#     using scikit-learn's PCA. It aims to reduce the dimensionality of the matrix.
-
-#     Arguments:
-#         cc_matrix: A co-citation matrix
-
-#     Returns:
-#         Tuple of principal components, explained variance ratios, and factor scores
-#     """
-
-#     # Ensure that the matrix does not contain any nans or infs
-#     assert not np.isnan(cc_matrix).any()
-#     assert not np.isinf(cc_matrix).any()
-
-#     # Standardize the data:
-#     scaler = StandardScaler()
-#     cc_matrix_standardized = scaler.fit_transform(cc_matrix)
-
-#     # Initialize PCA model
-#     pca = PCA()
-
-#     # Apply PCA to reduce dimensionality (choose number of components)
-#   #  pca.n_components = n_components  # Adjust n_components as needed
-
-#     # Fit the model
-#     pca.fit(cc_matrix_standardized)
-
-#     # Get principal components
-#     principal_components = pca.components_
-
-#     # Get explained variance ratios
-#     explained_variance_ratios = pca.explained_variance_ratio_
-
-#     # Project data onto principal components (factor scores)
-#     factor_scores = pca.transform(cc_matrix_standardized)
-    #TODO add option here to drop rows with a specific percentage of zeros
-
-#     return principal_components, explained_variance_ratios, factor_scores
-
-# def factor_analysis(cc_matrix):
-#     """
-#     This function performs dimensionality reduction and applies promax rotation.
-
-#     Arguments:
-#         cc_matrix: A co-citation matrix
-
-#     Returns:
-#         Tuple containing:
-#             - principal components
-#             - explained variance ratios
-#             - factor loadings
-#             - factor scores
-#             - rotated loadings (after applying promax rotation)
-#     """
-
-#     # Ensure that the matrix does not contain any nans or infs
-#     assert not np.isnan(cc_matrix).any()
-#     assert not np.isinf(cc_matrix).any()
-
-#     # Standardize the data:
-#     scaler = StandardScaler()
-#     cc_matrix_standardized = scaler.fit_transform(cc_matrix)
-
-#     # Initialize PCA model
-#     pca = PCA()
-
-#     # Apply PCA to reduce dimensionality (choose number of components)
-#     pca.fit(cc_matrix_standardized)
-
-#     # Extract principal components
-#     principal_components = pca.components_
-
-#     # Explained variance ratios (relevant only if PCA used)
-#     explained_variance_ratios = pca.explained_variance_ratio_
-
-#     # Always use PCA components for factor analysis
-#     factor_model = Factor(principal_components)
-
-#     # Fit the model
-#     factor_results = factor_model.fit()
-
-#     # Apply promax rotation (always)
-#     rotated_factor_results = factor_results.rotate('promax')
-
-#     # Get factor analysis results
-#     loadings = rotated_factor_results.loadings
-#     factor_scores = rotated_factor_results.factor_score
-
-#     # Return final results
-#     return principal_components, explained_variance_ratios, loadings, factor_scores, rotated_factor_results.loadings_
-
-
 if __name__ == '__main__':
     graph = create_graph_from_dimensions_full_dataset(
         "data"
@@ -328,5 +221,10 @@ if __name__ == '__main__':
         + "publications_with_CT_in_titles_abstracts.csv"
     )
     matrix = create_matrix(graph, "co_citation")
-    prepared_matrix = prepare_matrix(matrix, 0.9)
-    print(prepared_matrix.head())
+    prepared_matrix = prepare_matrix(matrix, 0.75)
+    print(prepared_matrix.shape)
+    # Count the number of zero entries
+    print(prepared_matrix.size - np.count_nonzero(prepared_matrix))
+    # Size of the matrix
+    print(prepared_matrix.size)
+    ev, loadings, factor_scores = factor_analysis(prepared_matrix)
