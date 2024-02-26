@@ -102,18 +102,6 @@ def prepare_matrix(matrix, threshold):
     # Convert the matrix to a pandas dataframe
     matrix = pd.DataFrame(matrix_array, index=matrix.index, columns=matrix.index)
 
-    # Check if the matrix is symmetric, as this is a requirement for the diagonal treatment
-    assert check_symmetric(matrix)
-
-    # Treat diagonal
-    # The diagonal of the matrix contains the self-citations or self-BCFs. These are
-    # usually not of interest, but have to be treated in some way to make sure that they don't
-    # negatively affect the factor analysis. There are different ways to treat the diagonal,
-    # for example by setting the diagonal to zero, or by replacing the diagonal with the average
-    # of the off-diagonal values (Zhao and Strotmann, 2015). The latter is the more common practice in
-    # the literature.
-    matrix = modify_diagonal(matrix)
-
     # Drop all rows and columns that are all zeros, as they do not contain any information
     # and would only increase the dimensionality of the matrix.
     matrix = matrix.loc[(matrix.sum(axis=1) != 0), (matrix.sum(axis=0) != 0)]
