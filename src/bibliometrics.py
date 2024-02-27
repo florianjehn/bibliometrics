@@ -85,7 +85,8 @@ def prepare_matrix(matrix, threshold):
 
     Arguments:
         matrix: A co-citation or BCF matrix
-        threshold: The threshold for dropping rows and columns
+        threshold: The threshold for dropping rows and columns. This is maximal
+        percentage of zeros in a column allowed
 
     Returns:
         A prepared matrix
@@ -104,10 +105,6 @@ def prepare_matrix(matrix, threshold):
     # Treat the diagonal of the matrix
     matrix = modify_diagonal(matrix)
 
-    # Drop all rows and columns that are all zeros, as they do not contain any information
-    # and would only increase the dimensionality of the matrix.
-    matrix = matrix.loc[(matrix.sum(axis=1) != 0), (matrix.sum(axis=0) != 0)] # das macht die Symmetrie kaputt
-
     # Drop all the rows and columns whose entries are below a certain threshold of
     # Co-citation counts or BCFs. This is a common practice in the literature to
     # reduce the dimensionality of the matrix and to focus on the most relevant
@@ -115,8 +112,8 @@ def prepare_matrix(matrix, threshold):
     # of the cells are containing zeros and then dropping the rows and columns which have
     # a higher percentage of zeros than the threshold.
     # Check if the threshold is a valid percentage
-    assert 0 <= threshold <= 1
-    matrix = remove_sparse_rows_cols(matrix, threshold) # das macht auch die Symmetrie kaputt
+    assert 0 <= threshold <= 100
+    matrix = remove_zero_entries(matrix, threshold)
 
     # Check if the matrix is symmetric
     assert check_symmetric(matrix)
@@ -157,63 +154,87 @@ def modify_diagonal(df):
     return df
 
 
-def remove_sparse_rows_cols(df, percent_threshold):
+def remove_zero_entries(df, threshold):
     """
-    Removes rows and columns from a DataFrame where more than a specified
-    percentage of values are zero.
+    This function takes in a dataframe and a threshold percentage.
+    It first determines the percentage of zeros in each column.
+    It then gets the names of all the columns with a number of zeros above a certain threshold
+    percentage. It then removes both the rows and columns with the thus identified column names.
 
     Args:
-        df (pd.DataFrame): The DataFrame to filter.
-        percent_threshold (float): The percentage of zeros above which a row
-            or column will be removed. For example, 0.15 means that a row or
-            a maximum of 15% of zeros is allowed.
+        df (pd.DataFrame): The dataframe to be modified.
+        threshold (float): The threshold percentage for the number of zeros in a column.
 
     Returns:
-        pd.DataFrame: The filtered DataFrame.
+        pd.DataFrame: The modified dataframe.
     """
-    assert 0 <= percent_threshold <= 1
 
-    # Filter rows
-    rows_to_keep = (df != 0).sum(axis=1) / df.shape[1] > 1 - percent_threshold
-    df = df[rows_to_keep]
+    # Calculate the number of zeros in each column
+    zero_counts = df.eq(0).sum()
 
-    # Filter columns
-    cols_to_keep = (df != 0).sum(axis=0) / df.shape[0] > 1 - percent_threshold
-    df = df.loc[:, cols_to_keep]
+    # Calculate the percentage of zeros in each column
+    percent_zeros = (zero_counts / len(df)) * 100
+
+    # Get the column names of columns with a number of zeros above the threshold
+    entries_to_remove = percent_zeros[percent_zeros > threshold].index.tolist()
+
+    # Remove the identified columns
+    df = df.drop(entries_to_remove, axis=1)
+
+    # Check which entries are still present in the rows
+    updated_entries_to_remove = [entry for entry in entries_to_remove if entry in df.index]
+
+    # Remove the rows of the identified columns
+    df = df.drop(updated_entries_to_remove, axis=0)
 
     return df
 
 
-def factor_analysis(cc_matrix):
+def factor_analysis(matrix, min_variance_explained=30):
     """
     This function takes a co-citation matrix and applies factor analysis
     using statsmodels' Factor class. It aims to reduce the dimensionality of the matrix.
 
     Arguments:
-        cc_matrix: A co-citation matrix
+        matrix: A co-citation matrix
 
     Returns:
         Tuple of eigenvalues, factor loadings, and factor scores
     """
     # Initialize Factor model with principal component extraction
-    factor_model = Factor(endog=cc_matrix, n_factor=10, method='pa')
+    # It set the number of factors to the number of rows in the matrix minus 1
+    # because I ran into the same problem as this guy here:
+    # https://stats.stackexchange.com/questions/440099/factor-analysis-cumulative-explained-variance-exceeding-100-when-k-factors-p
+    factor_model = Factor(endog=matrix, n_factor=matrix.shape[0]-1, method='pa')
 
     # Fit the model
     factor_results = factor_model.fit()
 
     # Apply promax rotation
-    rotated_factor_results = factor_results.rotate('promax')
+    factor_results.rotate('promax')
 
-    # Get the eigenvalues
-    ev = rotated_factor_results.eigenvals
+    # Calculate how much of the variance is explained by the factors
+    # The documentation of statsmodels is kinda crap, but this is the way they calculate
+    # the explained variance. See here:
+    # https://github.com/statsmodels/statsmodels/blob/main/statsmodels/multivariate/factor.py#L961
+    variance_explained = factor_results.eigenvals / factor_results.n_comp * 100
+
+    # We only want to consider those factors that explain at least 30 % of the variance
+    # This is what Zhao and Strotmann (2015) suggest.
+    # Determine the number of factors that explain at least 30 % of the variance
+    num_factors = len(variance_explained[variance_explained > min_variance_explained])
 
     # Get the factor loadings
-    loadings = rotated_factor_results.loadings
+    loadings = factor_results.loadings
+    # Convert the loadings to a pandas dataframe
+    loadings = pd.DataFrame(loadings, index=matrix.columns)
+    loadings = loadings.iloc[:, :num_factors]
+    # Rename the columns
+    loadings.columns = [f"Factor {i+1}" for i in range(num_factors)]
 
-    # Get the factor scores
-    factor_scores = rotated_factor_results.factor_score
+    loadings.to_csv("." + os.sep + "data" + os.sep + "results" + os.sep + "loadings.csv")
 
-    return ev, loadings, factor_scores
+    return loadings
 
 
 if __name__ == '__main__':
@@ -225,10 +246,5 @@ if __name__ == '__main__':
         + "publications_with_CT_in_titles_abstracts.csv"
     )
     matrix = create_matrix(graph, "co_citation")
-    prepared_matrix = prepare_matrix(matrix, 0.75)
-    print(prepared_matrix.shape)
-    # Count the number of zero entries
-    print(prepared_matrix.size - np.count_nonzero(prepared_matrix))
-    # Size of the matrix
-    print(prepared_matrix.size)
-    ev, loadings, factor_scores = factor_analysis(prepared_matrix)
+    prepared_matrix = prepare_matrix(matrix, 75)
+    loadings = factor_analysis(prepared_matrix)
