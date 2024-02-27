@@ -1,7 +1,8 @@
-pandas>=1.4.3
+pandas==2.2.1
 setuptools>=61.2.0
 pytest>=7.1.2
-numpy>=1.23.1
-matplotlib>=3.5.1
-scikit-learn
-networkx
+numpy==1.26.4
+matplotlib==3.8.3
+scikit-learn==1.4.1.post1
+networkx==3.2.1
+statsmodels==0.14.1

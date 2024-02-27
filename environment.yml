@@ -4,7 +4,9 @@ channels:
   - defaults
 dependencies:
   - python=3.12
-  - numpy
-  - networkx
-  - pandas
-  - scikit-learn
+  - numpy=1.26.4
+  - networkx=3.2.1
+  - pandas=2.2.1
+  - scikit-learn=1.4.1.post1
+  - matplotlib=3.8.3
+  - statsmodel=0.14.1
