@@ -1,6 +1,7 @@
 # GCR/ER Bibliometrics Project
 
 ## What this is and what it can be used for
+This repository contains the code needed to run a bibliometric analysis in the global catastrophic and existential risk research field. It is mostly based on the book ["Analysis and Visualization of Citation Networks" by Zhao and Strotmann (2015)](https://link.springer.com/book/10.1007/978-3-031-02291-3). 
 
 ## Installation
 
