@@ -101,15 +101,12 @@ def prepare_matrix(matrix, threshold):
     # Convert the matrix to a pandas dataframe
     matrix = pd.DataFrame(matrix_array, index=matrix.index, columns=matrix.index)
 
-    # Check if the matrix is symmetric
-    assert check_symmetric(matrix)
-
     # Treat the diagonal of the matrix
     matrix = modify_diagonal(matrix)
 
     # Drop all rows and columns that are all zeros, as they do not contain any information
     # and would only increase the dimensionality of the matrix.
-    matrix = matrix.loc[(matrix.sum(axis=1) != 0), (matrix.sum(axis=0) != 0)]
+    matrix = matrix.loc[(matrix.sum(axis=1) != 0), (matrix.sum(axis=0) != 0)] # das macht die Symmetrie kaputt
 
     # Drop all the rows and columns whose entries are below a certain threshold of
     # Co-citation counts or BCFs. This is a common practice in the literature to
@@ -119,7 +116,10 @@ def prepare_matrix(matrix, threshold):
     # a higher percentage of zeros than the threshold.
     # Check if the threshold is a valid percentage
     assert 0 <= threshold <= 1
-    matrix = remove_sparse_rows_cols(matrix, threshold)
+    matrix = remove_sparse_rows_cols(matrix, threshold) # das macht auch die Symmetrie kaputt
+
+    # Check if the matrix is symmetric
+    assert check_symmetric(matrix)
 
     return matrix
 
