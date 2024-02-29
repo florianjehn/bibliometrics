@@ -148,7 +148,7 @@ def remove_zero_entries(df, threshold):
     return df
 
 
-def factor_analysis(matrix, min_variance_explained=30):
+def factor_analysis(matrix, min_variance_explained=10):
     """
     This function takes a co-citation or bibliographic coupling matrix and applies factor analysis
     using statsmodels' Factor class.
@@ -177,9 +177,7 @@ def factor_analysis(matrix, min_variance_explained=30):
     # https://github.com/statsmodels/statsmodels/blob/main/statsmodels/multivariate/factor.py#L961
     variance_explained = factor_results.eigenvals / factor_results.n_comp * 100
 
-    # We only want to consider those factors that explain at least 30 % of the variance
-    # This is what Zhao and Strotmann (2015) suggest.
-    # Determine the number of factors that explain at least 30 % of the variance
+    # We only want to consider those factors that explain at least a certain % of the variance
     num_factors = len(variance_explained[variance_explained > min_variance_explained])
 
     # Get the factor loadings
