@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import networkx as nx
+import time
 
 
-def create_graph_from_dimensions_full_dataset(path):
+def create_graph_from_dimensions_full_dataset(path, nrows=None):
     """
     This creates a directed graph from the full dataset of publications.
 
@@ -13,7 +14,11 @@ def create_graph_from_dimensions_full_dataset(path):
     Returns:
         A citation matrix
     """
-    raw_df = pd.read_csv(path, index_col=0, nrows=50)
+    # Time how long to run the function
+    start = time.time()
+    print("Creating graph from literature")
+
+    raw_df = pd.read_csv(path, index_col=0, nrows=nrows)
     # set the index to the publication id
     raw_df.set_index("id", inplace=True)
 
@@ -42,5 +47,5 @@ def create_graph_from_dimensions_full_dataset(path):
         else:
             # Just add the node to the graph without any edges
             G.add_node(citing_paper)
-
+    print(f"Graph creation {round(((time.time() - start) / 60), 2)} minutes")
     return G
