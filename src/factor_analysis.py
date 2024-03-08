@@ -174,7 +174,7 @@ def remove_zero_entries(df, threshold):
     return df
 
 
-def factor_analysis(matrix, min_variance_explained=10):
+def factor_analysis(matrix, min_variance_explained=10, citation_metric):
     """
     This function takes a co-citation or bibliographic coupling matrix and applies factor analysis
     using statsmodels' Factor class.
@@ -223,9 +223,13 @@ def factor_analysis(matrix, min_variance_explained=10):
     loadings = pd.DataFrame(loadings, index=matrix.columns)
     loadings = loadings.iloc[:, :num_factors]
     # Rename the columns
-    loadings.columns = [f"Factor {i+1}" for i in range(num_factors)]
+    loadings.columns = [
+        f"Factor {i+1} (Variance explained: {round(variance_explained[i], 2)})" for i in range(
+            num_factors
+        )
+    ]
 
-    loadings.to_csv("." + os.sep + "results" + os.sep + "loadings.csv")
+    loadings.to_csv("." + os.sep + "results" + os.sep + "loadings_" + citation_metric + ".csv")
 
     print(f"Getting variance and loadings took {round(((time.time() - start) / 60), 2)} minutes")
 
@@ -241,6 +245,7 @@ if __name__ == '__main__':
         + "publications_with_CT_in_titles_abstracts.csv",
         nrows=1600,
     )
-    matrix = create_matrix(graph, "co_citation")
+    citation_metric = "co_citation"
+    matrix = create_matrix(graph, citation_metric)
     prepared_matrix = prepare_matrix(matrix, 70)
-    loadings = factor_analysis(prepared_matrix, min_variance_explained=3)
+    loadings = factor_analysis(prepared_matrix, min_variance_explained=1, citation_metric=citation_metric)
