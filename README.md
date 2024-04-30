@@ -1,13 +1,13 @@
 # Global Catastrophic Risk and Existential Risk Bibliometrics Project
 
 ## What this is and what it can be used for
-This repository contains the code needed to run a bibliometric analysis in the global catastrophic and existential risk research field by using [OpenAlex](https://openalex.org/) and [VOSviewer](https://www.vosviewer.com/).
+This repository contains the code needed to run a bibliometric analysis in the global catastrophic and existential risk research field by using [OpenAlex](https://openalex.org/), [VOSviewer](https://www.vosviewer.com/) and Python.
 
 ## How to get the data
 The data is from OpenAlex. You can get an updated version by running the query `https://api.openalex.org/works?page=1&filter=default.search:%22global+catastrophic+risk%22+OR+%22existential+risk%22`
 
 ## Clustering
-The data is clustered using VOSviewer's cluster features. We set the minimal cluster size to 50 entries. The clusters are then extracted from the .json that VOSviewer creates. 
+The data is clustered using VOSviewer's cluster features. We set the minimal cluster size to 50 entries and only use documents that have been cited at least once. The clusters are then extracted from the .json that VOSviewer creates. 
 
 ## Running the rest of the code
 
