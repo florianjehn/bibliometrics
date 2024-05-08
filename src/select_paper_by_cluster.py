@@ -32,6 +32,11 @@ for cluster_name, cluster in clusters:
     cols = main_cluster.columns.tolist()
     cols = cols[:3] + cols[-1:] + cols[3:-1]
     main_cluster = main_cluster[cols]
+    # Save with duplicates
     main_cluster.to_csv(
+        f"data{os.sep}main_papers{os.sep}including_duplicates{os.sep}cluster_{cluster_name}_main_works.csv", index=False
+    )
+    # Save without duplicates
+    main_cluster.drop_duplicates(subset="Title").to_csv(
         f"data{os.sep}main_papers{os.sep}cluster_{cluster_name}_main_works.csv", index=False
     )
