@@ -24,4 +24,4 @@ df = df.drop_duplicates(subset="Title", keep="first")
 assert shape_before > df.shape[0]
 
 # Save the data
-df.to_csv(f"data{os.sep}prepared{os.sep}remerge_data.csv", index=False)
+df.to_csv(f"data{os.sep}prepared{os.sep}remerged_data.csv", index=False)
