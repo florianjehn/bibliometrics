@@ -28,6 +28,10 @@ for cluster_name, cluster in clusters:
     main_citations = cluster.sort_values(by=["Citations"], ascending=False).head(10).copy()
     main_citations.loc[:, "Selected by"] = "Citations"
     main_cluster = pd.concat([main_strength, main_citations_normed, main_citations])
+    # Put the selected by column third
+    cols = main_cluster.columns.tolist()
+    cols = cols[:3] + cols[-1:] + cols[3:-1]
+    main_cluster = main_cluster[cols]
     main_cluster.to_csv(
         f"data{os.sep}main_papers{os.sep}cluster_{cluster_name}_main_works.csv", index=False
     )
