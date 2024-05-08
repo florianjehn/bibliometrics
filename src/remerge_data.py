@@ -23,5 +23,8 @@ df = df.drop_duplicates(subset="Title", keep="first")
 # This should remove some duplicates
 assert shape_before > df.shape[0]
 
+# Remove the clearly irrelevant papers with a total link strength smaller than 10
+df = df[df["Total link strength"] > 10]
+
 # Save the data
 df.to_csv(f"data{os.sep}prepared{os.sep}remerged_data.csv", index=False)
