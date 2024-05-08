@@ -16,6 +16,9 @@ clusters = clustered_papers.groupby("Cluster")
 # and total link strength
 # Write those to a csv seperate for each cluster
 for cluster_name, cluster in clusters:
+    # Remove the papers with a total link strength smaller than 10, as they are not very relevant
+    # and would only clutter the data
+    cluster = cluster[cluster["Total link strength"] > 10]
     sorted_strength = cluster.sort_values(by=["Total link strength"], ascending=False)
     main_strength = sorted_strength.head(15).copy()
     main_strength.loc[:, "Selected by"] = "Total link strength"
