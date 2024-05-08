@@ -12,20 +12,22 @@ assert clustered_papers["Cluster"].isnull().sum() == 0, "There are NaN values in
 
 clusters = clustered_papers.groupby("Cluster")
 
-# Go over the clusters and select the 10 papers with the highest normalized citations 
-# and total link strength
+# Go over the clusters and select the 10 papers with the highest normalized citations,
+# regular citations and total link strength
 # Write those to a csv seperate for each cluster
 for cluster_name, cluster in clusters:
     # Remove the papers with a total link strength smaller than 10, as they are not very relevant
     # and would only clutter the data
     cluster = cluster[cluster["Total link strength"] > 10]
     sorted_strength = cluster.sort_values(by=["Total link strength"], ascending=False)
-    main_strength = sorted_strength.head(15).copy()
+    main_strength = sorted_strength.head(10).copy()
     main_strength.loc[:, "Selected by"] = "Total link strength"
     sorted_citations = cluster.sort_values(by=["Norm. citations"], ascending=False)
-    main_citations = sorted_citations.head(15).copy()
-    main_citations.loc[:, "Selected by"] = "Norm. citations"
-    main_cluster = pd.concat([main_strength, main_citations])
+    main_citations_normed = sorted_citations.head(10).copy()
+    main_citations_normed.loc[:, "Selected by"] = "Norm. citations"
+    main_citations = cluster.sort_values(by=["Citations"], ascending=False).head(10).copy()
+    main_citations.loc[:, "Selected by"] = "Citations"
+    main_cluster = pd.concat([main_strength, main_citations_normed, main_citations])
     main_cluster.to_csv(
         f"data{os.sep}main_papers{os.sep}cluster_{cluster_name}_main_works.csv", index=False
     )
