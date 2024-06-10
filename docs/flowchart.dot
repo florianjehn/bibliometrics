@@ -1,0 +1,20 @@
+digraph G {
+    node [shape=box];
+
+    load_data [label="Download from OpenAlex (n=xxxx)"];
+    filter_cited_papers [label="Exclude uncited papers"];
+    filter_top_1000 [label="Exclude papers with low link strength"];
+    excluded_papers [label="Excluded Papers (n=xxxx)"];
+    final_data [label="Final Data (n=xxxx)"];
+
+
+    load_data -> filter_cited_papers;
+    filter_cited_papers -> filter_top_1000 [label="n=xxxx"];
+    filter_cited_papers -> excluded_papers [label="n=xxxx"];
+    filter_top_1000 -> final_data [label="n=xxxx"];
+    filter_top_1000 -> excluded_papers [label="n=xxxx"];
+
+
+
+    
+}
