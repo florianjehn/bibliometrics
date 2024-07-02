@@ -21,6 +21,9 @@ meta_df_data = []
 for item in items:
     # Extract relevant information from each item
     vos_id = item['id']
+    if "Title:" not in item['description']:
+        print(f"Skipping {item['description']} as it does not contain a title")
+        continue
     authors = [i.title() for i in item['description'].split(
         'Title:'
     )[0].replace(
