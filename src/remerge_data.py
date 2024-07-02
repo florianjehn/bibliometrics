@@ -15,8 +15,9 @@ df = pd.merge(vos_meta, open_alex, left_on="Title", right_on="display_name", how
 df_duplicates = df[df.duplicated(subset="Title", keep=False)]
 df_duplicates.to_csv(f"data{os.sep}prepared{os.sep}remerge_duplicates.csv", index=False)
 
-# The df now contains a bunch of duplicates. Therefore, we go through the dataframes and check for duplicates
-# When we find duplicates we keep the ones with the higest number of citations. 
+# The df now contains a bunch of duplicates. Therefore, we go through the dataframes
+# and check for duplicates
+# When we find duplicates we keep the ones with the higest number of citations.
 shape_before = df.shape[0]
 df = df.sort_values(by=["cited_by_count"], ascending=False)
 df = df.drop_duplicates(subset="Title", keep="first")
