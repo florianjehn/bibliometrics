@@ -5,7 +5,7 @@ import os
 clustered_papers = pd.read_csv(f"data{os.sep}prepared{os.sep}remerged_data.csv")
 
 # Check that we have the right number of clusters
-assert clustered_papers["Cluster"].nunique() == 32, f"Number of clusters is correct, but {
+assert clustered_papers["Cluster"].nunique() == 23, f"Number of clusters is correct, but {
     clustered_papers['Cluster'].nunique()
 }"
 assert clustered_papers["Cluster"].isnull().sum() == 0, "There are NaN values in the Cluster column"
@@ -16,8 +16,9 @@ clusters = clustered_papers.groupby("Cluster")
 # regular citations and total link strength
 # Write those to a csv seperate for each cluster
 for cluster_name, cluster in clusters:
-    # Skip the cluster if they have less than 10 papers
-    if cluster.shape[0] < 5:
+    # Skip the cluster if they have less than 5 or  papers
+    if cluster.shape[0] <= 5:
+        print(f"Skipping cluster {cluster_name} because it has less than 5 papers")
         continue
     num_papers = 15
     sorted_strength = cluster.sort_values(by=["Total link strength"], ascending=False)
