@@ -5,7 +5,7 @@ import os
 clustered_papers = pd.read_csv(f"data{os.sep}prepared{os.sep}remerged_data.csv")
 
 # Check that we have the right number of clusters
-assert clustered_papers["Cluster"].nunique() == 9, f"Number of clusters is not 9, but {
+assert clustered_papers["Cluster"].nunique() == 32, f"Number of clusters is correct, but {
     clustered_papers['Cluster'].nunique()
 }"
 assert clustered_papers["Cluster"].isnull().sum() == 0, "There are NaN values in the Cluster column"
@@ -16,6 +16,9 @@ clusters = clustered_papers.groupby("Cluster")
 # regular citations and total link strength
 # Write those to a csv seperate for each cluster
 for cluster_name, cluster in clusters:
+    # Skip the cluster if they have less than 10 papers
+    if cluster.shape[0] < 5:
+        continue
     num_papers = 15
     sorted_strength = cluster.sort_values(by=["Total link strength"], ascending=False)
     main_strength = sorted_strength.head(num_papers).copy()
@@ -40,15 +43,15 @@ for cluster_name, cluster in clusters:
     )
 
 # Do the same for the overall dataset
-# Remove the papers with a total link strength smaller than 10, as they are not very relevant
 # and would only clutter the data
+num_papers = 15
 sorted_strength = clustered_papers.sort_values(by=["Total link strength"], ascending=False)
-main_strength = sorted_strength.head().copy()
+main_strength = sorted_strength.head(num_papers).copy()
 main_strength.loc[:, "Selected by"] = "Total link strength"
 sorted_citations = clustered_papers.sort_values(by=["Norm. citations"], ascending=False)
-main_citations_normed = sorted_citations.head(10).copy()
+main_citations_normed = sorted_citations.head(num_papers).copy()
 main_citations_normed.loc[:, "Selected by"] = "Norm. citations"
-main_citations = clustered_papers.sort_values(by=["Citations"], ascending=False).head(10).copy()
+main_citations = clustered_papers.sort_values(by=["Citations"], ascending=False).head(num_papers).copy()
 main_citations.loc[:, "Selected by"] = "Citations"
 main_works = pd.concat([main_strength, main_citations_normed, main_citations])
 # Put the selected by column third
@@ -56,6 +59,7 @@ cols = main_works.columns.tolist()
 cols = cols[:3] + cols[-1:] + cols[3:-1]
 main_works = main_works[cols]
 # Save with duplicates
+
 main_works.to_csv(
     f"data{os.sep}main_papers{os.sep}including_duplicates{os.sep}overall_main_works.csv", index=False
 )

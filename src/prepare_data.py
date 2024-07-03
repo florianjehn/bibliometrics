@@ -102,6 +102,11 @@ for link in links:
 # Create the pandas dataframe from the list of dictionaries
 links_df = pd.DataFrame(links_df_data)
 
+# Remove the clusters with less than 5 papers
+clusters = meta_df['Cluster'].value_counts()
+clusters_to_remove = clusters[clusters < 5].index
+meta_df = meta_df[~meta_df['Cluster'].isin(clusters_to_remove)]
+
 # Save the dataframes to csv files
 meta_df.to_csv(f'data{os.sep}prepared{os.sep}vos_meta.csv', index=False)
 links_df.to_csv(f'data{os.sep}prepared{os.sep}vos_links.csv', index=False)
