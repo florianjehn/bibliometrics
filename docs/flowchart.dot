@@ -6,8 +6,8 @@ digraph G {
     filter_clusters [label="Exclude small clusters"];
     filter_low_links [label="Exclude documents with low link strength"];
     filter_unrelated_clusters [label="Exclude unrelated clusters"];
-    excluded_documents [label="Excluded documents (n=2378)"];
-    final_data [label="Final Data (n=1078)"];
+    excluded_documents [label="Excluded documents (n=2365)"];
+    final_data [label="Final Data (n=1091)"];
 
 
     load_data -> filter_unconnected_documents;
@@ -15,9 +15,9 @@ digraph G {
     filter_unconnected_documents -> excluded_documents [label="n=1719"];
     filter_clusters -> filter_low_links [label="n=1708"];
     filter_low_links -> excluded_documents [label="n=224"];
-    filter_unrelated_clusters -> final_data [label="n=1078"];
+    filter_unrelated_clusters -> final_data [label="n=1091"];
     filter_low_links -> filter_unrelated_clusters [label="n=1484"];
-    filter_unrelated_clusters -> excluded_documents [label="n=406"];
+    filter_unrelated_clusters -> excluded_documents [label="n=393"];
     filter_clusters -> excluded_documents [label="n=29"];
 
 
