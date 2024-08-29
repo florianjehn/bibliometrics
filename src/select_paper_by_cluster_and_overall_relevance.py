@@ -21,6 +21,9 @@ for cluster_name, cluster in clusters:
         print(f"Skipping cluster {cluster_name} because it has less than 5 papers")
         continue
     num_papers = 15
+    sorted_relevance = cluster.sort_values(by=["relevance_score"], ascending=False)
+    main_relevance = sorted_relevance.head(num_papers).copy()
+    main_relevance.loc[:, "Selected by"] = "Relevance"
     sorted_strength = cluster.sort_values(by=["Total link strength"], ascending=False)
     main_strength = sorted_strength.head(num_papers).copy()
     main_strength.loc[:, "Selected by"] = "Total link strength"
@@ -29,7 +32,7 @@ for cluster_name, cluster in clusters:
     main_citations_normed.loc[:, "Selected by"] = "Norm. citations"
     main_citations = cluster.sort_values(by=["Citations"], ascending=False).head(num_papers).copy()
     main_citations.loc[:, "Selected by"] = "Citations"
-    main_works = pd.concat([main_strength, main_citations_normed, main_citations])
+    main_works = pd.concat([main_relevance, main_strength, main_citations_normed, main_citations])
     # Put the selected by column third
     cols = main_works.columns.tolist()
     cols = cols[:3] + cols[-1:] + cols[3:-1]
