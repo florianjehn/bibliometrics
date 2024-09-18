@@ -48,7 +48,7 @@ for cluster_name, cluster in clusters:
 # But first remove the discarded clusters
 other_topic_clusters = [6, 7, 8, 14, 15, 16, 18, 19, 22, 23]
 clustered_papers = clustered_papers[~clustered_papers["Cluster"].isin(other_topic_clusters)]
-num_papers = 15
+num_papers = 25
 sorted_strength = clustered_papers.sort_values(by=["Total link strength"], ascending=False)
 main_strength = sorted_strength.head(num_papers).copy()
 sorted_relevance = clustered_papers.sort_values(by=["relevance_score"], ascending=False)
