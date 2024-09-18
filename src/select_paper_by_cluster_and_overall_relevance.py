@@ -5,9 +5,7 @@ import os
 clustered_papers = pd.read_csv(f"data{os.sep}prepared{os.sep}remerged_data.csv")
 
 # Check that we have the right number of clusters
-assert clustered_papers["Cluster"].nunique() == 23, f"Number of clusters is correct, but {
-    clustered_papers['Cluster'].nunique()
-}"
+assert clustered_papers["Cluster"].nunique() == 23, f"Number of clusters is correct, but {clustered_papers['Cluster'].nunique()}"
 assert clustered_papers["Cluster"].isnull().sum() == 0, "There are NaN values in the Cluster column"
 
 clusters = clustered_papers.groupby("Cluster")
