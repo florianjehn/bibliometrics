@@ -4,22 +4,29 @@ digraph G {
     load_data [label="Download from OpenAlex (n=3456)"];
     filter_unconnected_documents [label="Exclude unconnected documents"];
     filter_clusters [label="Exclude small clusters"];
+    remove_duplicates [label="Remove duplicates"];
     filter_low_links [label="Exclude documents with low link strength"];
-    filter_unrelated_clusters [label="Exclude unrelated clusters"];
-    excluded_documents [label="Excluded documents (n=2365)"];
-    final_data [label="Final Data (n=1091)"];
+    filter_unrelated_clusters [label="Exclude unrelated clusters (shallow scan)"];
+    filter_unrelated_clusters_deep [label="Exclude unrelated clusters (deep scan)"];
+    excluded_documents [label="Provisionally Excluded documents (n=2346)"];
+    final_excluded_documents [label="Finally Excluded documents (n=2365)"];
+    final_data [label="Final Data for Review (n=1091)"];
 
 
     load_data -> filter_unconnected_documents;
     filter_unconnected_documents -> filter_clusters [label="n=1737"];
     filter_unconnected_documents -> excluded_documents [label="n=1719"];
-    filter_clusters -> filter_low_links [label="n=1708"];
+    filter_clusters -> remove_duplicates [label="n=1708"];
+    remove_duplicates -> filter_low_links [label="n=1708"];
+    remove_duplicates -> excluded_documents [label="n=10"];
     filter_low_links -> excluded_documents [label="n=224"];
-    filter_unrelated_clusters -> final_data [label="n=1091"];
     filter_low_links -> filter_unrelated_clusters [label="n=1484"];
     filter_unrelated_clusters -> excluded_documents [label="n=393"];
+    filter_unrelated_clusters -> filter_unrelated_clusters_deep [label="n=1091"];
+    filter_unrelated_clusters_deep -> excluded_documents [label="n=19"];
+    filter_unrelated_clusters_deep -> final_data [label="n=1091"];
     filter_clusters -> excluded_documents [label="n=29"];
-
+    excluded_documents -> final_excluded_documents [label="n=1091"];
 
 
     
