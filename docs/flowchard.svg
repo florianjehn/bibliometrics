@@ -1,151 +1,165 @@
 <?xml version="1.0" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="555pt" height="650pt" viewBox="0.00 0.00 554.57 649.8">
-<g id="graph0" class="graph" transform="translate(44.12518451664127,567.9306056940918) scale(0.8467453123625271)" data-name="G">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="555pt" height="755pt" viewBox="0.00 0.00 554.57 755.4">
+<g id="graph0" class="graph" transform="translate(39.29142146613117,673.4967188643927) scale(0.8467453123625271)" data-name="G">
 
-<polygon fill="white" stroke="none" points="-4,4 -4,-645.8 550.57,-645.8 550.57,4 -4,4"/>
+<polygon fill="white" stroke="none" points="-4,4 -4,-751.4 550.57,-751.4 550.57,4 -4,4"/>
 <!-- load_data -->
 <g id="node1" class="node" pointer-events="visible" data-name="load_data">
 
-<polygon fill="none" stroke="black" points="221.69,-641.8 0.1,-641.8 0.1,-605.8 221.69,-605.8 221.69,-641.8"/>
-<text text-anchor="middle" x="110.9" y="-619.6" font-family="Times,serif" font-size="14.00">Download from OpenAlex (n=3456)</text>
+<polygon fill="none" stroke="black" points="221.69,-747.4 0.1,-747.4 0.1,-711.4 221.69,-711.4 221.69,-747.4"/>
+<text text-anchor="middle" x="110.9" y="-725.2" font-family="Times,serif" font-size="14.00">Download from OpenAlex (n=3437)</text>
 </g>
 <!-- filter_unconnected_documents -->
 <g id="node2" class="node" pointer-events="visible" data-name="filter_unconnected_documents">
 
-<polygon fill="none" stroke="black" points="211.17,-568.8 10.63,-568.8 10.63,-532.8 211.17,-532.8 211.17,-568.8"/>
-<text text-anchor="middle" x="110.9" y="-546.6" font-family="Times,serif" font-size="14.00">Exclude unconnected documents</text>
+<polygon fill="none" stroke="black" points="211.17,-674.4 10.63,-674.4 10.63,-638.4 211.17,-638.4 211.17,-674.4"/>
+<text text-anchor="middle" x="110.9" y="-652.2" font-family="Times,serif" font-size="14.00">Exclude unconnected documents</text>
 </g>
 <!-- load_data&#45;&gt;filter_unconnected_documents -->
 <g id="edge1" class="edge" data-name="load_data-&gt;filter_unconnected_documents">
 
-<path fill="none" stroke="black" d="M110.9,-605.61C110.9,-598.03 110.9,-588.9 110.9,-580.34"/>
-<polygon fill="black" stroke="black" points="114.4,-580.34 110.9,-570.34 107.4,-580.34 114.4,-580.34"/>
+<path fill="none" stroke="black" d="M110.9,-711.21C110.9,-703.63 110.9,-694.5 110.9,-685.94"/>
+<polygon fill="black" stroke="black" points="114.4,-685.94 110.9,-675.94 107.4,-685.94 114.4,-685.94"/>
 </g>
 <!-- filter_clusters -->
 <g id="node3" class="node" pointer-events="visible" data-name="filter_clusters">
 
-<polygon fill="none" stroke="black" points="264.86,-480 122.93,-480 122.93,-444 264.86,-444 264.86,-480"/>
-<text text-anchor="middle" x="193.9" y="-457.8" font-family="Times,serif" font-size="14.00">Exclude small clusters</text>
+<polygon fill="none" stroke="black" points="264.86,-585.6 122.93,-585.6 122.93,-549.6 264.86,-549.6 264.86,-585.6"/>
+<text text-anchor="middle" x="193.9" y="-563.4" font-family="Times,serif" font-size="14.00">Exclude small clusters</text>
 </g>
 <!-- filter_unconnected_documents&#45;&gt;filter_clusters -->
 <g id="edge2" class="edge" data-name="filter_unconnected_documents-&gt;filter_clusters">
 
-<path fill="none" stroke="black" d="M127.3,-532.65C139.38,-520.01 156.01,-502.62 169.64,-488.37"/>
-<polygon fill="black" stroke="black" points="171.82,-491.15 176.2,-481.5 166.76,-486.31 171.82,-491.15"/>
-<text text-anchor="middle" x="181.35" y="-502.2" font-family="Times,serif" font-size="14.00">n=1737</text>
+<path fill="none" stroke="black" d="M127.3,-638.25C139.38,-625.61 156.01,-608.22 169.64,-593.97"/>
+<polygon fill="black" stroke="black" points="171.82,-596.75 176.2,-587.1 166.76,-591.91 171.82,-596.75"/>
+<text text-anchor="middle" x="181.35" y="-607.8" font-family="Times,serif" font-size="14.00">n=1692</text>
 </g>
 <!-- excluded_documents -->
 <g id="node7" class="node" pointer-events="visible" data-name="excluded_documents">
 
-<polygon fill="none" stroke="black" points="341.97,-124.8 77.82,-124.8 77.82,-88.8 341.97,-88.8 341.97,-124.8"/>
-<text text-anchor="middle" x="209.9" y="-102.6" font-family="Times,serif" font-size="14.00">Provisionally excluded documents (n=2426)</text>
+<polygon fill="none" stroke="black" points="341.97,-230.4 77.82,-230.4 77.82,-194.4 341.97,-194.4 341.97,-230.4"/>
+<text text-anchor="middle" x="209.9" y="-208.2" font-family="Times,serif" font-size="14.00">Provisionally excluded documents (n=2382)</text>
 </g>
 <!-- filter_unconnected_documents&#45;&gt;excluded_documents -->
 <g id="edge3" class="edge" data-name="filter_unconnected_documents-&gt;excluded_documents">
 
-<path fill="none" stroke="black" d="M105.75,-532.35C101.07,-514.95 94.9,-487.36 94.9,-463 94.9,-463 94.9,-463 94.9,-194.6 94.9,-164.77 119.86,-143.89 146.52,-130.1"/>
-<polygon fill="black" stroke="black" points="147.92,-133.31 155.41,-125.82 144.88,-127.01 147.92,-133.31"/>
-<text text-anchor="middle" x="116.35" y="-324.6" font-family="Times,serif" font-size="14.00">n=1719</text>
+<path fill="none" stroke="black" d="M105.75,-637.95C101.07,-620.55 94.9,-592.96 94.9,-568.6 94.9,-568.6 94.9,-568.6 94.9,-300.2 94.9,-270.37 119.86,-249.49 146.52,-235.7"/>
+<polygon fill="black" stroke="black" points="147.92,-238.91 155.41,-231.42 144.88,-232.61 147.92,-238.91"/>
+<text text-anchor="middle" x="116.35" y="-430.2" font-family="Times,serif" font-size="14.00">n=1745</text>
 </g>
 <!-- filter_low_links -->
 <g id="node4" class="node" pointer-events="visible" data-name="filter_low_links">
 
-<polygon fill="none" stroke="black" points="433.19,-391.2 180.6,-391.2 180.6,-355.2 433.19,-355.2 433.19,-391.2"/>
-<text text-anchor="middle" x="306.9" y="-369" font-family="Times,serif" font-size="14.00">Exclude documents with low link strength</text>
+<polygon fill="none" stroke="black" points="433.19,-496.8 180.6,-496.8 180.6,-460.8 433.19,-460.8 433.19,-496.8"/>
+<text text-anchor="middle" x="306.9" y="-474.6" font-family="Times,serif" font-size="14.00">Exclude documents with low link strength</text>
 </g>
 <!-- filter_clusters&#45;&gt;filter_low_links -->
 <g id="edge4" class="edge" data-name="filter_clusters-&gt;filter_low_links">
 
-<path fill="none" stroke="black" d="M216.49,-443.64C233.35,-430.69 256.61,-412.83 275.31,-398.47"/>
-<polygon fill="black" stroke="black" points="277.34,-401.32 283.14,-392.45 273.08,-395.76 277.34,-401.32"/>
-<text text-anchor="middle" x="281.35" y="-413.4" font-family="Times,serif" font-size="14.00">n=1708</text>
+<path fill="none" stroke="black" d="M216.49,-549.24C233.35,-536.29 256.61,-518.43 275.31,-504.07"/>
+<polygon fill="black" stroke="black" points="277.34,-506.92 283.14,-498.05 273.08,-501.36 277.34,-506.92"/>
+<text text-anchor="middle" x="281.35" y="-519" font-family="Times,serif" font-size="14.00">n=1663</text>
 </g>
 <!-- filter_clusters&#45;&gt;excluded_documents -->
 <g id="edge11" class="edge" data-name="filter_clusters-&gt;excluded_documents">
 
-<path fill="none" stroke="black" d="M180.02,-443.51C168.12,-426.74 152.9,-400.2 152.9,-374.2 152.9,-374.2 152.9,-374.2 152.9,-194.6 152.9,-171.33 167.39,-149.45 181.76,-133.49"/>
-<polygon fill="black" stroke="black" points="184.21,-135.99 188.6,-126.34 179.15,-131.15 184.21,-135.99"/>
-<text text-anchor="middle" x="167.35" y="-280.2" font-family="Times,serif" font-size="14.00">n=29</text>
+<path fill="none" stroke="black" d="M180.02,-549.11C168.12,-532.34 152.9,-505.8 152.9,-479.8 152.9,-479.8 152.9,-479.8 152.9,-300.2 152.9,-276.93 167.39,-255.05 181.76,-239.09"/>
+<polygon fill="black" stroke="black" points="184.21,-241.59 188.6,-231.94 179.15,-236.75 184.21,-241.59"/>
+<text text-anchor="middle" x="167.35" y="-385.8" font-family="Times,serif" font-size="14.00">n=29</text>
 </g>
 <!-- filter_unrelated_clusters -->
 <g id="node5" class="node" pointer-events="visible" data-name="filter_unrelated_clusters">
 
-<polygon fill="none" stroke="black" points="486.37,-302.4 237.43,-302.4 237.43,-266.4 486.37,-266.4 486.37,-302.4"/>
-<text text-anchor="middle" x="361.9" y="-280.2" font-family="Times,serif" font-size="14.00">Exclude unrelated clusters (shallow scan)</text>
+<polygon fill="none" stroke="black" points="486.37,-408 237.43,-408 237.43,-372 486.37,-372 486.37,-408"/>
+<text text-anchor="middle" x="361.9" y="-385.8" font-family="Times,serif" font-size="14.00">Exclude unrelated clusters (shallow scan)</text>
 </g>
 <!-- filter_low_links&#45;&gt;filter_unrelated_clusters -->
 <g id="edge6" class="edge" data-name="filter_low_links-&gt;filter_unrelated_clusters">
 
-<path fill="none" stroke="black" d="M317.76,-355.05C325.47,-342.89 335.97,-326.31 344.8,-312.38"/>
-<polygon fill="black" stroke="black" points="347.66,-314.41 350.06,-304.09 341.75,-310.66 347.66,-314.41"/>
-<text text-anchor="middle" x="360.35" y="-324.6" font-family="Times,serif" font-size="14.00">n=1484</text>
+<path fill="none" stroke="black" d="M317.76,-460.65C325.47,-448.49 335.97,-431.91 344.8,-417.98"/>
+<polygon fill="black" stroke="black" points="347.66,-420.01 350.06,-409.69 341.75,-416.26 347.66,-420.01"/>
+<text text-anchor="middle" x="360.35" y="-430.2" font-family="Times,serif" font-size="14.00">n=1439</text>
 </g>
 <!-- filter_low_links&#45;&gt;excluded_documents -->
 <g id="edge5" class="edge" data-name="filter_low_links-&gt;excluded_documents">
 
-<path fill="none" stroke="black" d="M278.53,-354.83C261.07,-342.5 239.99,-324.28 228.9,-302.4 201.7,-248.73 203.06,-176.1 206.46,-136.48"/>
-<polygon fill="black" stroke="black" points="209.94,-136.88 207.44,-126.58 202.98,-136.19 209.94,-136.88"/>
-<text text-anchor="middle" x="229.85" y="-235.8" font-family="Times,serif" font-size="14.00">n=224</text>
+<path fill="none" stroke="black" d="M278.53,-460.43C261.07,-448.1 239.99,-429.88 228.9,-408 201.7,-354.33 203.06,-281.7 206.46,-242.08"/>
+<polygon fill="black" stroke="black" points="209.94,-242.48 207.44,-232.18 202.98,-241.79 209.94,-242.48"/>
+<text text-anchor="middle" x="229.85" y="-341.4" font-family="Times,serif" font-size="14.00">n=224</text>
+</g>
+<!-- filter_unrelated_clusters_deep -->
+<g id="node6" class="node" pointer-events="visible" data-name="filter_unrelated_clusters_deep">
+
+<polygon fill="none" stroke="black" points="546.74,-319.2 315.05,-319.2 315.05,-283.2 546.74,-283.2 546.74,-319.2"/>
+<text text-anchor="middle" x="430.9" y="-297" font-family="Times,serif" font-size="14.00">Exclude unrelated clusters (deep scan)</text>
+</g>
+<!-- filter_unrelated_clusters&#45;&gt;filter_unrelated_clusters_deep -->
+<g id="edge8" class="edge" data-name="filter_unrelated_clusters-&gt;filter_unrelated_clusters_deep">
+
+<path fill="none" stroke="black" d="M375.53,-371.85C385.39,-359.45 398.89,-342.47 410.09,-328.38"/>
+<polygon fill="black" stroke="black" points="412.63,-330.8 416.12,-320.8 407.15,-326.45 412.63,-330.8"/>
+<text text-anchor="middle" x="423.35" y="-341.4" font-family="Times,serif" font-size="14.00">n=1102</text>
 </g>
 <!-- filter_unrelated_clusters&#45;&gt;excluded_documents -->
 <g id="edge7" class="edge" data-name="filter_unrelated_clusters-&gt;excluded_documents">
 
-<path fill="none" stroke="black" d="M333.35,-266.12C313.86,-253.33 288.34,-234.56 270,-213.6 249.32,-189.97 232.39,-158.1 221.83,-135.53"/>
-<polygon fill="black" stroke="black" points="225.12,-134.31 217.79,-126.66 218.74,-137.21 225.12,-134.31"/>
-<text text-anchor="middle" x="287.85" y="-191.4" font-family="Times,serif" font-size="14.00">n=393</text>
+<path fill="none" stroke="black" d="M333.35,-371.72C313.86,-358.93 288.34,-340.16 270,-319.2 249.32,-295.57 232.39,-263.7 221.83,-241.13"/>
+<polygon fill="black" stroke="black" points="225.12,-239.91 217.79,-232.26 218.74,-242.81 225.12,-239.91"/>
+<text text-anchor="middle" x="287.85" y="-297" font-family="Times,serif" font-size="14.00">n=337</text>
 </g>
-<!-- final_data -->
 <!-- filter_unrelated_clusters_deep&#45;&gt;excluded_documents -->
 <g id="edge9" class="edge" data-name="filter_unrelated_clusters_deep-&gt;excluded_documents">
 
-<path fill="none" stroke="black" d="M386.44,-177.14C351.3,-163.34 302.09,-144.01 264.54,-129.26"/>
-<polygon fill="black" stroke="black" points="266.28,-126.18 255.69,-125.79 263.72,-132.7 266.28,-126.18"/>
-<text text-anchor="middle" x="354.35" y="-147" font-family="Times,serif" font-size="14.00">n=61</text>
+<path fill="none" stroke="black" d="M386.44,-282.74C351.3,-268.94 302.09,-249.61 264.54,-234.86"/>
+<polygon fill="black" stroke="black" points="266.28,-231.78 255.69,-231.39 263.72,-238.3 266.28,-231.78"/>
+<text text-anchor="middle" x="354.35" y="-252.6" font-family="Times,serif" font-size="14.00">n=47</text>
 </g>
 <!-- final_data -->
 <g id="node9" class="node" pointer-events="visible" data-name="final_data">
 
-<polygon fill="none" stroke="black" points="528.92,-36 332.88,-36 332.88,0 528.92,0 528.92,-36"/>
-<text text-anchor="middle" x="430.9" y="-13.8" font-family="Times,serif" font-size="14.00">Final Data for Review (n=1056)</text>
+<polygon fill="none" stroke="black" points="528.92,-141.6 332.88,-141.6 332.88,-105.6 528.92,-105.6 528.92,-141.6"/>
+<text text-anchor="middle" x="430.9" y="-119.4" font-family="Times,serif" font-size="14.00">Final Data for Review (n=1081)</text>
 </g>
-<!-- filter_unrelated_clusters&#45;&gt;final_data -->
-<!-- filter_unrelated_clusters&#45;&gt;final_data -->
-
-
-<!-- filter_unrelated_clusters_deep -->
-<g id="node6" class="node" pointer-events="visible" data-name="filter_unrelated_clusters_deep">
-
-<polygon fill="none" stroke="black" points="546.74,-213.6 315.05,-213.6 315.05,-177.6 546.74,-177.6 546.74,-213.6"/>
-<text text-anchor="middle" x="430.9" y="-191.4" font-family="Times,serif" font-size="14.00">Exclude unrelated clusters (deep scan)</text>
-</g><g id="edge8" class="edge" data-name="filter_unrelated_clusters-&gt;filter_unrelated_clusters_deep" data-comment="filter_unrelated_clusters_deep">
-
-<path fill="none" stroke="black" d="M375.53,-266.25C385.39,-253.85 398.89,-236.87 410.09,-222.78"/>
-<polygon fill="black" stroke="black" points="412.63,-225.2 416.12,-215.2 407.15,-220.85 412.63,-225.2"/>
-<text text-anchor="middle" x="423.35" y="-235.8" font-family="Times,serif" font-size="14.00">n=1091</text>
-</g>
-<!-- final_excluded_documents -->
-
 <!-- filter_unrelated_clusters_deep&#45;&gt;final_data -->
 <g id="edge10" class="edge" data-name="filter_unrelated_clusters_deep-&gt;final_data">
 
-<path fill="none" stroke="black" d="M430.9,-177.12C430.9,-146.88 430.9,-84.52 430.9,-47.8"/>
-<polygon fill="black" stroke="black" points="434.4,-47.92 430.9,-37.92 427.4,-47.92 434.4,-47.92"/>
-<text text-anchor="middle" x="452.35" y="-102.6" font-family="Times,serif" font-size="14.00">n=1030</text>
+<path fill="none" stroke="black" d="M430.9,-282.72C430.9,-252.48 430.9,-190.12 430.9,-153.4"/>
+<polygon fill="black" stroke="black" points="434.4,-153.52 430.9,-143.52 427.4,-153.52 434.4,-153.52"/>
+<text text-anchor="middle" x="452.35" y="-208.2" font-family="Times,serif" font-size="14.00">n=1055</text>
 </g>
-<g id="node8" class="node" pointer-events="visible" data-name="final_excluded_documents" data-comment="filter_unrelated_clusters_deep-&gt;final_data">
+<!-- final_excluded_documents -->
+<g id="node8" class="node" pointer-events="visible" data-name="final_excluded_documents">
 
-<polygon fill="none" stroke="black" points="314.47,-36 85.32,-36 85.32,0 314.47,0 314.47,-36"/>
-<text text-anchor="middle" x="199.9" y="-13.8" font-family="Times,serif" font-size="14.00">Finally excluded documents (n=2400)</text>
+<polygon fill="none" stroke="black" points="314.47,-141.6 85.32,-141.6 85.32,-105.6 314.47,-105.6 314.47,-141.6"/>
+<text text-anchor="middle" x="199.9" y="-119.4" font-family="Times,serif" font-size="14.00">Finally excluded documents (n=2356)</text>
 </g>
-<g id="edge12" class="edge" data-name="excluded_documents-&gt;final_excluded_documents" data-comment="filter_unrelated_clusters_deep-&gt;final_data">
+<!-- excluded_documents&#45;&gt;final_excluded_documents -->
+<g id="edge12" class="edge" data-name="excluded_documents-&gt;final_excluded_documents">
 
-<path fill="none" stroke="black" d="M207.92,-88.65C206.58,-76.96 204.76,-61.19 203.19,-47.62"/>
-<polygon fill="black" stroke="black" points="206.7,-47.45 202.08,-37.91 199.74,-48.25 206.7,-47.45"/>
-<text text-anchor="middle" x="227.35" y="-58.2" font-family="Times,serif" font-size="14.00">n=2400</text>
-</g><g id="edge13" class="edge" data-name="excluded_documents-&gt;final_data" data-comment="filter_unrelated_clusters_deep-&gt;final_data">
+<path fill="none" stroke="black" d="M207.92,-194.25C206.58,-182.56 204.76,-166.79 203.19,-153.22"/>
+<polygon fill="black" stroke="black" points="206.7,-153.05 202.08,-143.51 199.74,-153.85 206.7,-153.05"/>
+<text text-anchor="middle" x="227.35" y="-163.8" font-family="Times,serif" font-size="14.00">n=2400</text>
+</g>
+<!-- excluded_documents&#45;&gt;final_data -->
+<g id="edge13" class="edge" data-name="excluded_documents-&gt;final_data">
 
-<path fill="none" stroke="black" d="M254.35,-88.34C289.5,-74.54 338.71,-55.21 376.25,-40.46"/>
-<polygon fill="black" stroke="black" points="377.08,-43.9 385.1,-36.99 374.52,-37.38 377.08,-43.9"/>
-<text text-anchor="middle" x="354.35" y="-58.2" font-family="Times,serif" font-size="14.00">n=26</text>
-</g></g>
+<path fill="none" stroke="black" d="M254.35,-193.94C289.5,-180.14 338.71,-160.81 376.25,-146.06"/>
+<polygon fill="black" stroke="black" points="377.08,-149.5 385.1,-142.59 374.52,-142.98 377.08,-149.5"/>
+<text text-anchor="middle" x="354.35" y="-163.8" font-family="Times,serif" font-size="14.00">n=26</text>
+</g>
+<!-- in -->
+<g id="node10" class="node" pointer-events="visible" data-name="in_paper" data-comment="in">
+
+<polygon fill="none" stroke="black" points="478.45,-36 383.35,-36 383.35,0 478.45,0 478.45,-36"/>
+<text text-anchor="middle" x="430.9" y="-13.8" font-family="Times,serif" font-size="14.00">Cited (n=223)</text>
+</g>
+<!-- final_data&#45;&gt;in_paper -->
+<g id="edge14" class="edge" data-name="final_data-&gt;in_paper">
+
+<path fill="none" stroke="black" d="M430.9,-105.49C430.9,-89.84 430.9,-66.37 430.9,-47.82"/>
+<polygon fill="black" stroke="black" points="434.4,-47.99 430.9,-37.99 427.4,-47.99 434.4,-47.99"/>
+<text text-anchor="middle" x="472.3" y="-75" font-family="Times,serif" font-size="14.00">Selected based</text>
+<text text-anchor="middle" x="472.3" y="-58.2" font-family="Times,serif" font-size="14.00">on relevance</text>
+</g>
+</g>
 </svg>

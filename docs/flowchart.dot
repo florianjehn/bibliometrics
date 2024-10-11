@@ -10,6 +10,7 @@ digraph G {
     excluded_documents [label="Provisionally excluded documents (n=2382)"];
     final_excluded_documents [label="Finally excluded documents (n=2356)"];
     final_data [label="Final Data for Review (n=1081)"];
+    in_paper [label="Cited (n=223)"];
 
 
     load_data -> filter_unconnected_documents;
@@ -25,7 +26,7 @@ digraph G {
     filter_clusters -> excluded_documents [label="n=29"];
     excluded_documents -> final_excluded_documents [label="n=2400"];
     excluded_documents -> final_data [label="n=26"];
-
+    final_data -> in_paper [label="Selected based\non relevance"];
 
     
 }
