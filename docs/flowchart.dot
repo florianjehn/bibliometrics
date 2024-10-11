@@ -7,9 +7,9 @@ digraph G {
     filter_low_links [label="Exclude documents with low link strength"];
     filter_unrelated_clusters [label="Exclude unrelated clusters (shallow scan)"];
     filter_unrelated_clusters_deep [label="Exclude unrelated clusters (deep scan)"];
-    excluded_documents [label="Provisionally excluded documents (n=2426)"];
-    final_excluded_documents [label="Finally excluded documents (n=2400)"];
-    final_data [label="Final Data for Review (n=1056)"];
+    excluded_documents [label="Provisionally excluded documents (n=2382)"];
+    final_excluded_documents [label="Finally excluded documents (n=2356)"];
+    final_data [label="Final Data for Review (n=1081)"];
 
 
     load_data -> filter_unconnected_documents;
@@ -18,10 +18,10 @@ digraph G {
     filter_clusters -> filter_low_links [label="n=1663"];
     filter_low_links -> excluded_documents [label="n=224"];
     filter_low_links -> filter_unrelated_clusters [label="n=1439"];
-    filter_unrelated_clusters -> excluded_documents [label="n=393"];
-    filter_unrelated_clusters -> filter_unrelated_clusters_deep [label="n=1091"];
-    filter_unrelated_clusters_deep -> excluded_documents [label="n=61"];
-    filter_unrelated_clusters_deep -> final_data [label="n=1030"];
+    filter_unrelated_clusters -> excluded_documents [label="n=337"];
+    filter_unrelated_clusters -> filter_unrelated_clusters_deep [label="n=1102"];
+    filter_unrelated_clusters_deep -> excluded_documents [label="n=47"];
+    filter_unrelated_clusters_deep -> final_data [label="n=1055"];
     filter_clusters -> excluded_documents [label="n=29"];
     excluded_documents -> final_excluded_documents [label="n=2400"];
     excluded_documents -> final_data [label="n=26"];
