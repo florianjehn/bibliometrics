@@ -8,8 +8,8 @@ digraph G {
     filter_unrelated_clusters [label="Exclude unrelated clusters (shallow scan)"];
     filter_unrelated_clusters_deep [label="Exclude unrelated clusters (deep scan)"];
     excluded_documents [label="Provisionally excluded documents (n=2382)"];
-    final_excluded_documents [label="Finally excluded documents (n=2356)"];
-    final_data [label="Final Data for Review (n=1081)"];
+    final_excluded_documents [label="Finally excluded documents (n=2332)"];
+    final_data [label="Final Data for Review (n=1105)"];
     in_paper [label="Cited (n=223)"];
 
 
@@ -24,9 +24,8 @@ digraph G {
     filter_unrelated_clusters_deep -> excluded_documents [label="n=47"];
     filter_unrelated_clusters_deep -> final_data [label="n=1055"];
     filter_clusters -> excluded_documents [label="n=29"];
-    excluded_documents -> final_excluded_documents [label="n=2400"];
-    excluded_documents -> final_data [label="n=26"];
+    excluded_documents -> final_excluded_documents [label="n=2332"];
+    excluded_documents -> final_data [label="n=50\nre-added after\nmanual review"];
     final_data -> in_paper [label="Selected based\non relevance"];
-
     
 }
