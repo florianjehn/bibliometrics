@@ -7,11 +7,15 @@ This repository contains the code needed to run a bibliometric analysis in the g
 The data is from OpenAlex. You can get an updated version by running the query `https://api.openalex.org/works?page=1&filter=default.search:%22global+catastrophic+risk%22+OR+%22existential+risk%22`
 
 ## Clustering
-The data is clustered using VOSviewer's cluster features. We set the minimal cluster size to 45 entries and only use documents that have been cited at least once. The clusters are then extracted from the .json that VOSviewer creates. 
+The data is clustered using VOSviewer's cluster features. We used the default clustering parameters from VOSViewer. The clusters are then extracted from the .json that VOSviewer creates. 
 
 ## Running the rest of the code
 
-Everything after the clustering is done directly in Python. To be able to easily run the code, you can follow these steps:
+Everything after the clustering is done directly in Python. 
+
+## Getting this to run on your computer
+
+To be able to easily run the code, you can follow these steps:
 
 To install the bibliometrics package, we recommend setting up a virtual environment. This will ensure that the package and its dependencies are isolated from other projects on your machine, which can prevent conflicts and make it easier to manage your dependencies. Here are the steps to follow:
 
