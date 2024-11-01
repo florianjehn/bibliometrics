@@ -29,4 +29,4 @@ To install the bibliometrics package, we recommend setting up a virtual environm
 
 * Then, create the kernel by running `python -m ipykernel install --user --name=bibliometrics`. This command will create a kernel with the name you specified "bibliometrics" , which you can use to run the example notebook or play around with the model yourself.
 
-You can now use the kernel "bibliometrics" to run the example notebook or play around with the model yourself. If you are using the kernel and it fails due an import error for the model package, you might have to rerun: pip install -e .
+You can now use the kernel "bibliometrics" to run the example notebook or play around with the code. If you are using the kernel and it fails due an import error for the model package, you might have to rerun: pip install -e .
