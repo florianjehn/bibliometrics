@@ -23,7 +23,7 @@ To install the bibliometrics package, we recommend setting up a virtual environm
 
 * Activate the environment by running `conda activate bibliometrics`. This command will make the virtual environment you just created the active one, so that when you run any python command or install any package, it will do it within the environment.
 
-* Install the package by running `pip install -e` . in the main folder of the repository. This command will install the package you are currently in as a editable package, so that when you make changes to the package, you don't have to reinstall it again.
+* Install the package by running `pip install -e .` in the main folder of the repository. This command will install the package you are currently in as a editable package, so that when you make changes to the package, you don't have to reinstall it again.
 
 * If you want to run the example Jupyter notebook, you'll need to create a kernel for the environment. First, install the necessary tools by running `conda install -c anaconda ipykernel`. This command will install the necessary tools to create a kernel for the Jupyter notebook. A kernel is a component of Jupyter notebook that allows you to run your code. It communicates with the notebook web application and the notebook document format to execute code and display the results.
 
