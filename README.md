@@ -3,6 +3,9 @@
 ## What this is and what it can be used for
 This repository contains the code needed to run a bibliometric analysis in the global catastrophic and existential risk research field by using [OpenAlex](https://openalex.org/), [VOSviewer](https://www.vosviewer.com/) and Python.
 
+* [Preprint of paper](https://eartharxiv.org/repository/view/8145/)
+* [Supplemental information for the preprint](https://zenodo.org/records/14243421)
+
 ## How to get the data
 The data is from OpenAlex. You can get an updated version by running the query `https://api.openalex.org/works?page=1&filter=default.search:%22global+catastrophic+risk%22+OR+%22existential+risk%22`
 
