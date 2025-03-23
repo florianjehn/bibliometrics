@@ -12,6 +12,8 @@ The data is from OpenAlex. You can get an updated version by running the query `
 ## Clustering
 The data is clustered using VOSviewer's cluster features. We used the default clustering parameters from VOSViewer. The clusters are then extracted from the .json that VOSviewer creates. 
 
+The final labeling of the clusters are: `cluster_names = {1: "Artificial Intelligence", 2: "Climate Change", 3: "Foundations", 4: "Governance", 5: "Pandemics", 9: "Transhumanism", 10: "Reasoning and Risk", 11: "Global Resilience and Food Security", 12: "Risk Management and Mitigation", 17: "Emerging Biotechnologies, Emerging Futures"}` All other clusters have been deemed as not being about GCR during the analysis. 
+
 ## Running the rest of the code
 
 Everything after the clustering is done directly in Python. 
